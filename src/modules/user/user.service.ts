@@ -2,8 +2,9 @@
 import { injectable, inject } from "tsyringe";
 import { UserRepository } from "./user.repository";
 import { UserSignUpReqDto } from "./dtos/user.req.dto";
-import { UserSignUpResDto } from "./dtos/user.res.dto"; // [1] DTO Import 추가
-import { Result, success, failed } from "../../common/types/result.type";
+import { UserSignUpResDto } from "./dtos/user.res.dto"; 
+import { Result, created, conflict } from "../../common/types/result.type";
+import { UserErrorCode } from "../../common/constants/error-code";
 
 @injectable()
 export class UserService {
@@ -13,15 +14,18 @@ export class UserService {
     const exists = await this.userRepository.findByEmail(dto.email);
     
     if (exists) {
-      return failed("이미 존재하는 이메일입니다.", "USR_001", 409);
+      return conflict({ 
+        message: "이미 존재하는 이메일입니다.", 
+        errorCode: UserErrorCode.DUPLICATE_EMAIL 
+      });
     }
 
     const newUser = await this.userRepository.createUser(dto);
 
-    return success({ 
+    return created({ 
       id: newUser.id, 
       email: newUser.email, 
       name: newUser.name 
-    }, 201);
+    });
   }
 }

@@ -11,8 +11,8 @@ export const globalErrorHandler = (
 ) => {
   if (err instanceof ValidateError) {
     console.warn(`Validation Error for ${req.path}:`, err.fields);
-    
-    const response = badRequest("입력값이 올바르지 않습니다.", "VAL_001");
+
+    const response = badRequest({ errorCode: "ERR_VALIDATION", message: "유효성 검사에 실패했습니다." });
     return res.status(response.statusCode).json(response);
   }
 

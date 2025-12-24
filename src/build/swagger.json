@@ -84,7 +84,8 @@
 					"message",
 					"type"
 				],
-				"type": "object"
+				"type": "object",
+				"description": "------------------------------------------------------------------\nBase Result Types\n------------------------------------------------------------------"
 			},
 			"Result_UserSignUpResDto_": {
 				"anyOf": [
@@ -127,13 +128,7 @@
 					"type"
 				],
 				"type": "object",
-				"additionalProperties": false,
-				"example": {
-					"type": "failed",
-					"message": "입력값이 올바르지 않습니다.",
-					"errorCode": "VAL_001",
-					"statusCode": 400
-				}
+				"additionalProperties": false
 			},
 			"ConflictError": {
 				"description": "409 에러",
