@@ -1,5 +1,5 @@
 export class UserSignUpResDto {
-  id!: string
+  id!: number;
   email!: string;
   name!: string;
 }

@@ -8,15 +8,9 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "strictPropertyInitialization": false
   },
-  "include": [
-    "src/**/*" 
-  ],
-  "exclude": [
-    "node_modules",
-    "prisma",
-    "generated",
-    "prisma.config.ts" 
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "prisma", "generated", "prisma.config.ts"]
 }

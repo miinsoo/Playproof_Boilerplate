@@ -13,6 +13,6 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true 
+    "esModuleInterop": true
   }
 }
