@@ -1,10 +1,12 @@
 // src/modules/user/user.controller.ts
-import { Controller, Post, Body, Route, Tags, SuccessResponse, Response } from "tsoa";
+import { Controller, Post, Body, Route, Tags, SuccessResponse, Response, Get, Query, Queries } from "tsoa";
 import { injectable, inject } from "tsyringe";
 import { UserService } from "./user.service";
-import { UserSignUpReqDto } from "./dtos/user.req.dto";
-import { UserSignUpResDto } from "./dtos/user.res.dto"; 
+import { UserSignUpReqDto, UserUpdateReqDto, UserGetReqDto } from "./dtos/user.req.dto";
+import { UserSignUpResDto, UserUpdateResDto, UserGetResDto } from "./dtos/user.res.dto"; 
 import { Result, BadRequestError, ConflictError, InternalServerError } from "../../common/types/result.type";
+import { User } from "@prisma/client";
+import { get } from "node:http";
 
 @Route("users")
 @Tags("User")
@@ -24,6 +26,21 @@ export class UserController extends Controller {
   ): Promise<Result<UserSignUpResDto>> {
     
     const result = await this.userService.signUp(body);
+
+    this.setStatus(result.statusCode);
+
+    return result;
+  }
+
+  @SuccessResponse("200", "OK") 
+  @Response<BadRequestError>(400, "Bad Request") 
+  @Response<ConflictError>(409, "Conflict")
+  @Response<InternalServerError>(500, "Internal Server Error")
+  @Get("/")
+  public async getUserById(
+    @Queries() query: UserGetReqDto
+  ): Promise<Result<UserGetResDto>> {
+    const result = await this.userService.getUserById(query);
 
     this.setStatus(result.statusCode);
 
