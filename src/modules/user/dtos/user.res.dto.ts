@@ -1,3 +1,4 @@
+// src/modules/user/dtos/user.req.dto.ts
 export class UserSignUpResDto {
   /** 
    * @example 1
@@ -5,9 +6,9 @@ export class UserSignUpResDto {
   id!: number;
 
   /**
-   * @example "test@example.com"
+   * @example "010-1234-5678"
    */
-  email!: string;
+  phoneNumber!: string;
 
   /**
    * @example "홍길동"
@@ -22,9 +23,9 @@ export class UserUpdateResDto {
   id!: number;
 
   /**
-   * @example "test@example.com"
+   * @example "010-1234-5678"
    */
-  email!: string;
+  phoneNumber!: string;
 
   /**
    * @example "이순신"
@@ -39,9 +40,9 @@ export class UserGetResDto {
   id!: number;
 
   /**
-   * @example "test@example.com"
+   * @example "010-1234-5678"
    */
-  email!: string;
+  phoneNumber!: string;
 
   /**
    * @example "홍길동"

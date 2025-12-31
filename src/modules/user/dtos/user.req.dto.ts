@@ -1,11 +1,8 @@
-import { IsEmail, IsPhoneNumber, IsString, MinLength } from "class-validator";
+// src/modules/user/dtos/user.req.dto.ts
+import { Type } from "class-transformer";
+import { IsEmail, IsNumber, isNumber, IsPhoneNumber, IsString, MinLength } from "class-validator";
 
 export class UserSignUpReqDto {
-  /**
-   * @example "test@example.com"
-   */
-  @IsEmail()
-  email!: string;
   /**
    * @example "strongpassword"
    */
@@ -30,12 +27,6 @@ export class UserSignUpReqDto {
 }
 
 export class UserUpdateReqDto {
-  /**
-   * @example "test@example.com"
-   */
-  @IsEmail()
-  email!: string;
-
   /**
    * @example "strongpassword"
    */
@@ -65,6 +56,8 @@ export class UserGetReqDto {
   /**
    * @example 1
    */
+  @Type(() => Number)
+  @IsNumber()
   id!: number;
 }
 

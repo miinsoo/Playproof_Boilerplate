@@ -9,7 +9,7 @@ describe('UserService', () => {
 
   beforeEach(() => {
     userRepository = {
-      findByEmail: jest.fn(),
+      findByPhoneNumber: jest.fn(),
       createUser: jest.fn(),
     } as any;
 
@@ -18,21 +18,21 @@ describe('UserService', () => {
 
   describe('signUp', () => {
     const validSignUpDto: UserSignUpReqDto = {
-      email: 'test@example.com',
       password: 'password123',
       name: 'Test User',
       phoneNumber: '010-1234-5678',
     };
 
     it('should successfully create a new user', async () => {
-      userRepository.findByEmail.mockResolvedValue(null);
+      userRepository.findByPhoneNumber.mockResolvedValue(null);
       userRepository.createUser.mockResolvedValue({
         id: 1,
-        email: validSignUpDto.email,
         name: validSignUpDto.name,
         password: validSignUpDto.password,
         phoneNumber: validSignUpDto.phoneNumber,
+        avatarImg: 1,
         createdAt: new Date(),
+        updatedAt: new Date()
       });
 
       const result = await userService.signUp(validSignUpDto);
@@ -40,29 +40,30 @@ describe('UserService', () => {
       expect(result.type).toBe('success');
       expect(result.statusCode).toBe(201);
       if (result.type === 'success') {
-        expect(result.data.email).toBe(validSignUpDto.email);
+        expect(result.data.phoneNumber).toBe(validSignUpDto.phoneNumber);
         expect(result.data.name).toBe(validSignUpDto.name);
       }
     });
 
-    it('should return conflict error when email already exists', async () => {
+    it('should return conflict error when phoneNumber already exists', async () => {
       const existingUser = {
         id: 1,
-        email: validSignUpDto.email,
+        phoneNumber: validSignUpDto.phoneNumber,
         name: 'Existing User',
         password: 'password',
-        phoneNumber: '010-9999-9999',
+        avatarImg: 1,
         createdAt: new Date(),
+        updatedAt: new Date()
       };
-      userRepository.findByEmail.mockResolvedValue(existingUser);
+      userRepository.findByPhoneNumber.mockResolvedValue(existingUser);
 
       const result = await userService.signUp(validSignUpDto);
 
       expect(result.type).toBe('failed');
       expect(result.statusCode).toBe(409);
       if (result.type === 'failed') {
-        expect(result.message).toBe('이미 존재하는 이메일입니다.');
-        expect(result.errorCode).toBe(UserErrorCode.DUPLICATE_EMAIL);
+        expect(result.message).toBe('이미 존재하는 전화번호입니다.');
+        expect(result.errorCode).toBe(UserErrorCode.DUPLICATE_PHONE_NUMBER);
       }
     });
   });

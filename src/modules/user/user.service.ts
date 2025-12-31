@@ -11,12 +11,12 @@ export class UserService {
   constructor(@inject(UserRepository) private userRepository: UserRepository) {}
 
   async signUp(dto: UserSignUpReqDto): Promise<Result<UserSignUpResDto>> {
-    const exists = await this.userRepository.findByEmail(dto.email);
+    const exists = await this.userRepository.findByPhoneNumber(dto.phoneNumber);
     
     if (exists) {
       return conflict({ 
-        message: "이미 존재하는 이메일입니다.", 
-        errorCode: UserErrorCode.DUPLICATE_EMAIL 
+        message: "이미 존재하는 전화번호입니다.", 
+        errorCode: UserErrorCode.DUPLICATE_PHONE_NUMBER
       });
     }
 
@@ -24,7 +24,7 @@ export class UserService {
 
     return created({ 
       id: newUser.id, 
-      email: newUser.email, 
+      phoneNumber: newUser.phoneNumber, 
       name: newUser.name 
     });
   }
@@ -41,7 +41,7 @@ export class UserService {
 
     return ok({
       id: user.id,
-      email: user.email,
+      phoneNumber: user.phoneNumber,
       name: user.name
     });
   }

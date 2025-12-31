@@ -5,8 +5,8 @@ import { prisma } from "../../common/config/database";
 @singleton()
 export class UserRepository{
     
-  async findByEmail(email: string) {
-    return prisma.user.findUnique({ where: { email } });
+  async findByPhoneNumber(phoneNumber: string) {
+    return prisma.user.findUnique({ where: { phoneNumber } });
   }
 
   async findById(id: number) {
