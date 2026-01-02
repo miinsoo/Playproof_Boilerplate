@@ -7,41 +7,38 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"UserSignUpResDto": {
+			"UserGetResDto": {
 				"properties": {
 					"id": {
 						"type": "number",
 						"format": "double",
-						"description": "유저의 고유 ID (DB Primary Key)",
 						"example": 1
 					},
-					"email": {
+					"phoneNumber": {
 						"type": "string",
-						"description": "유저 이메일",
-						"example": "user@example.com"
+						"example": "010-1234-5678"
 					},
 					"name": {
 						"type": "string",
-						"description": "유저 이름",
 						"example": "홍길동"
 					}
 				},
 				"required": [
 					"id",
-					"email",
+					"phoneNumber",
 					"name"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"Success_UserSignUpResDto_": {
+			"Success_UserGetResDto_": {
 				"properties": {
 					"statusCode": {
 						"type": "number",
 						"format": "double"
 					},
 					"data": {
-						"$ref": "#/components/schemas/UserSignUpResDto"
+						"$ref": "#/components/schemas/UserGetResDto"
 					},
 					"type": {
 						"type": "string",
@@ -87,10 +84,10 @@
 				"type": "object",
 				"description": "------------------------------------------------------------------\nBase Result Types\n------------------------------------------------------------------"
 			},
-			"Result_UserSignUpResDto_": {
+			"Result_UserGetResDto_": {
 				"anyOf": [
 					{
-						"$ref": "#/components/schemas/Success_UserSignUpResDto_"
+						"$ref": "#/components/schemas/Success_UserGetResDto_"
 					},
 					{
 						"$ref": "#/components/schemas/Failed"
@@ -208,40 +205,160 @@
 					"statusCode": 500
 				}
 			},
-			"UserSignUpReqDto": {
+			"SignUpResDto": {
 				"properties": {
-					"email": {
-						"type": "string",
-						"description": "유저 이메일",
-						"example": "user@example.com"
-					},
-					"password": {
-						"type": "string",
-						"description": "유저 비밀번호",
-						"example": "securePassword123"
-					},
-					"name": {
-						"type": "string",
-						"description": "유저 이름",
-						"example": "홍길동"
+					"id": {
+						"type": "number",
+						"format": "double",
+						"example": 1
 					},
 					"phoneNumber": {
 						"type": "string",
-						"description": "유저 전화번호",
+						"example": "010-1234-5678"
+					},
+					"name": {
+						"type": "string",
+						"example": "홍길동"
+					}
+				},
+				"required": [
+					"id",
+					"phoneNumber",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Success_SignUpResDto_": {
+				"properties": {
+					"statusCode": {
+						"type": "number",
+						"format": "double"
+					},
+					"data": {
+						"$ref": "#/components/schemas/SignUpResDto"
+					},
+					"type": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"statusCode",
+					"data",
+					"type"
+				],
+				"type": "object"
+			},
+			"Result_SignUpResDto_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/Success_SignUpResDto_"
+					},
+					{
+						"$ref": "#/components/schemas/Failed"
+					}
+				]
+			},
+			"SignUpReqDto": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "홍길동"
+					},
+					"password": {
+						"type": "string",
+						"example": "strongpassword"
+					},
+					"phoneNumber": {
+						"type": "string",
 						"example": "010-1234-5678"
 					}
 				},
 				"required": [
-					"email",
-					"password",
 					"name",
+					"password",
 					"phoneNumber"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginResDto": {
+				"properties": {
+					"accessToken": {
+						"type": "string",
+						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+					}
+				},
+				"required": [
+					"accessToken"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Success_LoginResDto_": {
+				"properties": {
+					"statusCode": {
+						"type": "number",
+						"format": "double"
+					},
+					"data": {
+						"$ref": "#/components/schemas/LoginResDto"
+					},
+					"type": {
+						"type": "string",
+						"enum": [
+							"success"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"statusCode",
+					"data",
+					"type"
+				],
+				"type": "object"
+			},
+			"Result_LoginResDto_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/Success_LoginResDto_"
+					},
+					{
+						"$ref": "#/components/schemas/Failed"
+					}
+				]
+			},
+			"LoginReqDto": {
+				"properties": {
+					"phoneNumber": {
+						"type": "string",
+						"example": "010-1234-5678"
+					},
+					"password": {
+						"type": "string",
+						"example": "strongpassword"
+					}
+				},
+				"required": [
+					"phoneNumber",
+					"password"
 				],
 				"type": "object",
 				"additionalProperties": false
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"jwt": {
+				"type": "apiKey",
+				"name": "Authorization",
+				"in": "header"
+			}
+		}
 	},
 	"info": {
 		"title": "playproof-backend",
@@ -252,16 +369,16 @@
 		"contact": {}
 	},
 	"paths": {
-		"/users/signup": {
-			"post": {
-				"operationId": "SignUp",
+		"/users/me": {
+			"get": {
+				"operationId": "GetMyProfile",
 				"responses": {
-					"201": {
-						"description": "Created",
+					"200": {
+						"description": "OK",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/Result_UserSignUpResDto_"
+									"$ref": "#/components/schemas/Result_UserGetResDto_"
 								}
 							}
 						}
@@ -300,6 +417,62 @@
 				"tags": [
 					"User"
 				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/auth/signup": {
+			"post": {
+				"operationId": "SignUp",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_SignUpResDto_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BadRequestError"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ConflictError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InternalServerError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -307,7 +480,59 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UserSignUpReqDto"
+								"$ref": "#/components/schemas/SignUpReqDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Result_LoginResDto_"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad Request",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BadRequestError"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal Server Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InternalServerError"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginReqDto"
 							}
 						}
 					}

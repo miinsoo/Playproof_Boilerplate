@@ -1,20 +1,51 @@
-// src/modules/user/dtos/user.res.dto.ts
-export interface UserSignUpResDto {
-  /**
-   * 유저의 고유 ID (DB Primary Key)
+// src/modules/user/dtos/user.req.dto.ts
+export class UserSignUpResDto {
+  /** 
    * @example 1
    */
-  id: number;
+  id!: number;
 
   /**
-   * 유저 이메일
-   * @example "user@example.com"
+   * @example "010-1234-5678"
    */
-  email: string;
+  phoneNumber!: string;
 
   /**
-   * 유저 이름 
    * @example "홍길동"
    */
-  name: string;
+  name!: string;
+}
+
+export class UserUpdateResDto {
+  /** 
+   * @example 1
+   */
+  id!: number;
+
+  /**
+   * @example "010-1234-5678"
+   */
+  phoneNumber!: string;
+
+  /**
+   * @example "이순신"
+   */
+  name!: string;
+}
+
+export class UserGetResDto {
+  /** 
+   * @example 1
+   */
+  id!: number;
+
+  /**
+   * @example "010-1234-5678"
+   */
+  phoneNumber!: string;
+
+  /**
+   * @example "홍길동"
+   */
+  name!: string;
 }
